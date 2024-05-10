@@ -10,8 +10,7 @@ from typing import Tuple
 log = logging.getLogger(__name__)
 
 RE_FIELD = re.compile("^[a-zA-Z0-9_]{2,64}$")
-from frictionless import Package, Resource
-
+from frictionless import Package, Resource, validate
 
 def _get_resource(fpath) -> Tuple[Package, Resource]:
     datapackage_candidates = (
@@ -36,23 +35,29 @@ def is_csv(fpath):
     """
     errors = []
     package, resource = _get_resource(fpath)
-    report = resource.validate()
+
+    if package:
+        report = resource.validate()
+    else:
+        report = validate(fpath, skip_errors=["type-error"])
+
+    #report = resource.validate()
     current_errors = {}
     if not report.valid:
-        current_errors = report.flatten(["rowPosition", "fieldPosition", "code"])
+        current_errors = report.flatten(['message'])
         log.error(f"Invalid file: {fpath}.")
         log.debug(json.dumps(current_errors, indent=2))
-        errors.append({fpath.as_posix(): current_errors})
+        #errors.append({fpath.as_posix(): current_errors})
 
     #
     # Test field names if a datapackage is not defined.
     #
     if not package:
         for field_name in [
-            field.name
+            field
             for tasks in report.tasks
-            for field in tasks.resource.schema.fields
-            if not RE_FIELD.match(str(field.name))
+            for field in tasks.labels
+            if not RE_FIELD.match(str(field))
         ]:
             log.error(
                 f"Invalid field name for publication: {field_name} in {fpath.name}"
@@ -60,7 +65,7 @@ def is_csv(fpath):
             current_errors = {
                 field_name: f"Invalid field name for publication: {field_name}"
             }
-
+    
     if current_errors:
         errors.append({fpath.as_posix(): current_errors})
         raise ValueError(errors)
