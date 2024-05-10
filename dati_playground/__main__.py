@@ -130,12 +130,13 @@ def main(
                             errors.append(f"{f} is not valid: {ret.errors}")
                     except ValueError as e:
                         errors.append(f"{f} is not valid: {e}")
-            if errors:
-                raise ValueError("Errors found: " + "\n".join(errors))
-
+        if errors:
+            print("Errors found:")
+            for error in errors:
+                print("-",error,"\n")
         else:
             pass
-        print("No errors found")
+            print("No errors found")
 
 
 if __name__ == "__main__":
