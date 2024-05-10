@@ -112,10 +112,16 @@ def main(
         if command == "validate":
             for f in files:
                 f = Path(f)
+                print(f"validating {f}")
                 if validate_shacl:
                     precommit_validators.validate_shacl(f)
                 if validate_oas3:
-                    is_openapi(f.read_text())
+                    try:
+                        ret = is_openapi(f.read_text())
+                        if not ret:
+                            errors.append(f"{f} is not valid: {ret.errors}")
+                    except Exception as e:
+                        errors.append(f"{f} is not valid: {e}")
                 if validate_jsonschema:
                     is_jsonschema(f.read_text())
                 if validate_versioned_directory:
@@ -123,7 +129,6 @@ def main(
                 if validate_turtle:
                     is_turtle(f.read_text())
                 if validate_csv:
-                    print(f"validating {f}")
                     try:
                         ret = is_csv(f)
                         if ret.valid is False:
@@ -133,7 +138,7 @@ def main(
         if errors:
             print("Errors found:")
             for error in errors:
-                print("-",error,"\n")
+                print(" - ",error,"\n")
         else:
             pass
             print("No errors found")
