@@ -10,7 +10,7 @@ import click
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-from dati_playground import precommit_validators
+#from dati_playground import precommit_validators
 from dati_playground.csv import is_csv
 from dati_playground.schema import build_schema
 from dati_playground.tools import (
@@ -24,6 +24,8 @@ from dati_playground.validators import (
     is_turtle,
     list_files,
     validate_file,
+    shacl,
+    versioned_directory
 )
 
 
@@ -114,7 +116,7 @@ def main(
                 f = Path(f)
                 print(f"validating {f}")
                 if validate_shacl:
-                    precommit_validators.validate_shacl(f)
+                    shacl.validate(f)
                 if validate_oas3:
                     try:
                         ret = is_openapi(f.read_text())
@@ -125,7 +127,7 @@ def main(
                 if validate_jsonschema:
                     is_jsonschema(f.read_text())
                 if validate_versioned_directory:
-                    precommit_validators.validate_directory(f, errors)
+                    versioned_directory.validate(f, errors)
                 if validate_turtle:
                     is_turtle(f.read_text())
                 if validate_csv:

@@ -6,7 +6,7 @@ import jsonschema
 import yaml
 from rdflib import Graph
 
-from .utils import MIME_JSONLD, MIME_TURTLE, yaml_to_json
+from dati_playground.utils import MIME_JSONLD, MIME_TURTLE, yaml_to_json
 
 
 def true(*a, **kw):
