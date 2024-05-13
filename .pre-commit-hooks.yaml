@@ -26,7 +26,7 @@
     description: This hook validates a schema provided in yaml format
     entry: python -m dati_playground validate --validate-jsonschema=true
     language: python
-    files: '.*\.schema.yaml'
+    files: ^assets/.*\.schema.yaml
     exclude: >-
       .*example.*
     types:
@@ -84,7 +84,7 @@
       If the present directories match the required ones and their names are compliant, 
       the check will pass, even if there are fewer directories
 
-    entry: python -m dati_playground validate --validate-repo-structure=true
-    files: ^assets/
+    entry: python -m dati_playground validate --validate-repo-structure=true assets
     language: python
-    types: [directory]
+    fail_fast: true
+    pass_filenames: false
