@@ -141,7 +141,6 @@ def main(
                     except ValueError as e:
                         errors.append(f"{f} is not valid: {e}")
                 if validate_repo_structure:
-                    log.info(f)
                     repo_structure.validate(f)
 
         if errors:
