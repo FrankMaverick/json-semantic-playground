@@ -70,3 +70,21 @@
     language: python
     types:
     - file
+
+-   id: validate-repo-structure
+    name: Validate repository structure
+    description: |-
+      Check that the structure of the assets directories 
+      complies with the specified requirements.
+
+      The required directories are as follows: 
+      "assets/controlled-vocabularies", "assets/ontologies", "assets/schemas".
+
+      If there are any other directories within "assets", the check will fail.
+      If the present directories match the required ones and their names are compliant, 
+      the check will pass, even if there are fewer directories
+
+    entry: python -m dati_playground validate --validate-repo-structure=true
+    files: ^assets/
+    language: python
+    types: [directory]

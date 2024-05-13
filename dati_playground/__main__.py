@@ -25,7 +25,8 @@ from dati_playground.validators import (
     list_files,
     validate_file,
     shacl,
-    versioned_directory
+    versioned_directory,
+    repo_structure
 )
 
 
@@ -43,6 +44,7 @@ from dati_playground.validators import (
 @click.option("--validate-versioned-directory", default=False)
 @click.option("--validate-turtle", default=False)
 @click.option("--validate-csv", default=False)
+@click.option("--validate-repo-structure", default=False)
 @click.option("--pattern", default="")
 @click.option("--exclude", default=["NoneString"], type=str, multiple=True)
 @click.option("--debug", default=False, type=bool)
@@ -59,6 +61,7 @@ def main(
     validate_versioned_directory,
     validate_turtle,
     validate_csv,
+    validate_repo_structure,
     pattern,
     exclude,
     build_schema_index,
@@ -137,6 +140,10 @@ def main(
                             errors.append(f"{f} is not valid: {ret.errors}")
                     except ValueError as e:
                         errors.append(f"{f} is not valid: {e}")
+                if validate_repo_structure:
+                    log.info(f)
+                    repo_structure.validate(f)
+
         if errors:
             print("Errors found:")
             for error in errors:
