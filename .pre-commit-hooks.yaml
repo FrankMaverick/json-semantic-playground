@@ -88,3 +88,18 @@
     language: python
     fail_fast: true
     pass_filenames: false
+
+-   id: validate-filename-format
+    name: Validate filename e directory name formats
+    description: |-
+      This check ensures that file and directory name adhere to a predefined naming pattern. 
+      It verifies file extensions and the names of files and their parent directories 
+      against a specified regular expression pattern.
+      The check will fail if any deviations are found.
+
+    entry: python -m dati_playground validate --validate-filename-format=true
+    files: >-
+      ^assets/.*
+    language: python
+    types:
+    - file

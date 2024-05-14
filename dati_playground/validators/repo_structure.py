@@ -1,10 +1,9 @@
 from pathlib import Path
-from typing import List
 import logging
 
 log = logging.getLogger(__name__)
-required_subdirs = ["assets/controlled-vocabularies", "assets/ontologies", "assets/schemas"]
 
+required_subdirs = ["assets/controlled-vocabularies", "assets/ontologies", "assets/schemas"]
 
 def validate(root_dir: Path):
     """
@@ -36,6 +35,6 @@ def validate(root_dir: Path):
         missing_dirs = set(subdirs) - set(required_subdirs)
         
         if missing_dirs:
-            log.error(f"One or more Directories do not conform to the expected structure in {root_dir} dir: {missing_dirs}")
+            log.error(f"One or more directories do not conform to the expected structure in '{root_dir}' dir: {missing_dirs}")
 
         return exit(1)

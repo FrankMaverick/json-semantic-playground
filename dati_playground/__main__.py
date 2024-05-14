@@ -26,9 +26,9 @@ from dati_playground.validators import (
     validate_file,
     shacl,
     versioned_directory,
-    repo_structure
+    repo_structure,
+    filename_format
 )
-
 
 @click.command()
 @click.argument("command", type=(click.Choice(["validate", "build"])))
@@ -45,6 +45,7 @@ from dati_playground.validators import (
 @click.option("--validate-turtle", default=False)
 @click.option("--validate-csv", default=False)
 @click.option("--validate-repo-structure", default=False)
+@click.option("--validate-filename-format", default=False)
 @click.option("--pattern", default="")
 @click.option("--exclude", default=["NoneString"], type=str, multiple=True)
 @click.option("--debug", default=False, type=bool)
@@ -62,6 +63,7 @@ def main(
     validate_turtle,
     validate_csv,
     validate_repo_structure,
+    validate_filename_format,
     pattern,
     exclude,
     build_schema_index,
@@ -142,6 +144,8 @@ def main(
                         errors.append(f"{f} is not valid: {e}")
                 if validate_repo_structure:
                     repo_structure.validate(f)
+                if validate_filename_format:
+                    filename_format.validate(f)
 
         if errors:
             print("Errors found:")
