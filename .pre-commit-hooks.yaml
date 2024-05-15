@@ -99,7 +99,7 @@
 
     entry: python -m dati_playground validate --validate-filename-format=true
     files: >-
-      ^assets/.*
+      ^assets\/.*
     language: python
     types:
     - file
@@ -113,7 +113,7 @@
       then compares it with the filename to ensure consistency. 
       In the case of schemas, it verifies the filename with the .oas3.yaml extension 
       instead of the .ttl file as in other cases. 
-      If a discrepancy is found, the check fails.l.
+      If a discrepancy is found, the check fails.
 
     entry: python -m dati_playground validate --validate-filename-match-uri=true
     files: >-
@@ -121,3 +121,20 @@
     language: python
     types:
     - file
+
+-   id: validate-filename-match-directory
+    name: Validate filename match directory name
+    description: |-
+      It checks that each file's name matches the name of the directory containing it 
+      (excluding versioning directories). 
+      It excludes specific filenames and file extensions from the validation process. 
+      If a file's name or its containing directory name does not match 
+      the expected pattern, an error is logged, and the validation fails.
+
+    entry: python -m dati_playground validate --validate-filename-match-directory=true
+    files: >-
+      ^assets\/.*
+    language: python
+    types:
+    - file
+

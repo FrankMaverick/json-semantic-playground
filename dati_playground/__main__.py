@@ -28,7 +28,8 @@ from dati_playground.validators import (
     versioned_directory,
     repo_structure,
     filename_format,
-    filename_match_uri
+    filename_match_uri,
+    filename_match_directory
 )
 
 @click.command()
@@ -48,6 +49,7 @@ from dati_playground.validators import (
 @click.option("--validate-repo-structure", default=False)
 @click.option("--validate-filename-format", default=False)
 @click.option("--validate-filename-match-uri", default=False)
+@click.option("--validate-filename-match-directory", default=False)
 @click.option("--pattern", default="")
 @click.option("--exclude", default=["NoneString"], type=str, multiple=True)
 @click.option("--debug", default=False, type=bool)
@@ -67,6 +69,7 @@ def main(
     validate_repo_structure,
     validate_filename_format,
     validate_filename_match_uri,
+    validate_filename_match_directory,
     pattern,
     exclude,
     build_schema_index,
@@ -151,6 +154,8 @@ def main(
                     filename_format.validate(f)
                 if validate_filename_match_uri:
                     filename_match_uri.validate(f)
+                if validate_filename_match_directory:
+                    filename_match_directory.validate(f)
 
         if errors:
             print("Errors found:")
