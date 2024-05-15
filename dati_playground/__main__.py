@@ -27,7 +27,8 @@ from dati_playground.validators import (
     shacl,
     versioned_directory,
     repo_structure,
-    filename_format
+    filename_format,
+    filename_match_uri
 )
 
 @click.command()
@@ -46,6 +47,7 @@ from dati_playground.validators import (
 @click.option("--validate-csv", default=False)
 @click.option("--validate-repo-structure", default=False)
 @click.option("--validate-filename-format", default=False)
+@click.option("--validate-filename-match-uri", default=False)
 @click.option("--pattern", default="")
 @click.option("--exclude", default=["NoneString"], type=str, multiple=True)
 @click.option("--debug", default=False, type=bool)
@@ -64,6 +66,7 @@ def main(
     validate_csv,
     validate_repo_structure,
     validate_filename_format,
+    validate_filename_match_uri,
     pattern,
     exclude,
     build_schema_index,
@@ -146,6 +149,8 @@ def main(
                     repo_structure.validate(f)
                 if validate_filename_format:
                     filename_format.validate(f)
+                if validate_filename_match_uri:
+                    filename_match_uri.validate(f)
 
         if errors:
             print("Errors found:")

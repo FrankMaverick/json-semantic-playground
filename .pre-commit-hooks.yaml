@@ -103,3 +103,21 @@
     language: python
     types:
     - file
+
+
+-   id: validate-filename-match-uri
+    name: Validate filename match uri in ttl
+    description: |-
+      It checks if a file's name matches its corresponding URI extracted from a TTL file. 
+      It extracts the main URI relative to the TTL file, 
+      then compares it with the filename to ensure consistency. 
+      In the case of schemas, it verifies the filename with the .oas3.yaml extension 
+      instead of the .ttl file as in other cases. 
+      If a discrepancy is found, the check fails.l.
+
+    entry: python -m dati_playground validate --validate-filename-match-uri=true
+    files: >-
+      ^assets/.*\.ttl
+    language: python
+    types:
+    - file
