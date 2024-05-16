@@ -10,7 +10,6 @@ import click
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-#from dati_playground import precommit_validators
 from dati_playground.csv import is_csv
 from dati_playground.schema import build_schema
 from dati_playground.tools import (
@@ -74,7 +73,7 @@ def main(
     exclude,
     build_schema_index,
     debug,
-):
+):  
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     if command == "build":
@@ -88,7 +87,7 @@ def main(
             if pattern in x.name
             if all((exclude_item not in x.name for exclude_item in exclude))
         ]
-
+        
         log.warning(f"Examining {file_list} with {exclude}")
         workers = Pool(processes=4)
         if validate:
@@ -121,11 +120,12 @@ def main(
         workers.close()
         exit(0)
     else:
+        log.debug(files)
         errors = []
         if command == "validate":
             for f in files:
                 f = Path(f)
-                print(f"validating {f}")
+                #print(f"validating {f}")
                 if validate_shacl:
                     shacl.validate(f)
                 if validate_oas3:
@@ -155,15 +155,16 @@ def main(
                 if validate_filename_match_uri:
                     filename_match_uri.validate(f)
                 if validate_filename_match_directory:
-                    filename_match_directory.validate(f)
+                    ret = filename_match_directory.validate(f, errors)
 
-        if errors:
-            print("Errors found:")
-            for error in errors:
-                print(" - ",error,"\n")
+            if errors:
+                print("Errors found:")
+                for error in errors:
+                    print(" - ",error,"\n")
+                exit(1)
         else:
             pass
-            print("No errors found")
+        print("No errors found")
 
 
 if __name__ == "__main__":
