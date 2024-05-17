@@ -68,6 +68,7 @@
     files: >-
       ^assets/vocabularies/.*\.csv
     language: python
+    require_serial: true
     types:
     - file
 
@@ -88,6 +89,7 @@
     language: python
     fail_fast: true
     pass_filenames: false
+    require_serial: true
 
 -   id: validate-filename-format
     name: Validate filename e directory name formats
@@ -101,6 +103,7 @@
     files: >-
       ^assets\/.*
     language: python
+    require_serial: true
     types:
     - file
 
@@ -117,8 +120,9 @@
 
     entry: python -m dati_playground validate --validate-filename-match-uri=true
     files: >-
-      ^assets/.*\.ttl
+      ^assets\/.*\.ttl
     language: python
+    require_serial: true
     types:
     - file
 
@@ -135,6 +139,7 @@
     files: >-
       ^assets\/.*
     language: python
+    require_serial: true
     types:
     - file
 

@@ -153,18 +153,19 @@ def main(
                 if validate_filename_format:
                     filename_format.validate(f)
                 if validate_filename_match_uri:
-                    filename_match_uri.validate(f)
+                    filename_match_uri.validate(f, errors)
                 if validate_filename_match_directory:
                     ret = filename_match_directory.validate(f, errors)
 
             if errors:
+                #raise RuntimeError("Errors found: " + "\n".join(errors))
                 print("Errors found:")
                 for error in errors:
                     print(" - ",error,"\n")
                 exit(1)
-        else:
-            pass
-        print("No errors found")
+            else:
+                pass
+                print("No errors found")
 
 
 if __name__ == "__main__":

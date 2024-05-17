@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 # List of filenames to be excluded
-EXCLUDED_FILENAMES = ["index.ttl", "datapackage.json", "context-short.ld.yaml", "rules.shacl"]
+EXCLUDED_FILENAMES = ["index.ttl", "datapackage.json", "context-short.ld.yaml", "rules.shacl", "latest"]
 
 # List of extensions to be excluded
 EXCLUDED_EXTENSIONS = [".md", ".shacl", ".frame.yamlld", ".ld.yaml", ".schema.yaml", ".example.yaml", ".example.ttl", ".png", ".html", ".xml", ".xsd"]
