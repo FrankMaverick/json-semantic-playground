@@ -143,3 +143,16 @@
     types:
     - file
 
+-   id: validate-directory-versioning-pattern
+    name: Validate versioning pattern of directory
+    description: |-
+      Checks the directory structure for versioned directories. 
+      It ensures that the directory is a leaf, is versioned, 
+      and has consistent versioning patterns with its sibling directories. 
+      If the directory name does not match the expected versioning pattern, 
+      an error is logged, and the validation fails.
+
+    entry: python -m dati_playground validate --validate-directory-versioning-pattern=true assets\/**\/*.*
+    language: python
+    pass_filenames: false
+    require_serial: true
