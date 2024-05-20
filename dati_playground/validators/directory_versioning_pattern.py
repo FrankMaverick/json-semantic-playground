@@ -23,10 +23,9 @@ def sibling_directories(directory: Path) -> list:
     """
     Retrieves a list of sibling directories at the same level as the specified directory.
     """    
-    # Ottieni la directory genitore
     parent_directory = directory.parent
 
-    # Ottieni tutte le sottodirectory della directory genitore
+    # all subdir
     subdirectories = []
     for subdir in parent_directory.iterdir():
         if subdir.is_dir():
@@ -46,7 +45,7 @@ def validate(fpath: Path, errors):
     Validates the directory structure and naming conventions for versioned directories.
     """    
 
-    # verifico che sia una directory
+    # check if fpath is leaf and versioned dir
     if not fpath.is_dir() or not is_leaf_directory(fpath) or not is_versioned_directory(fpath):
         log.debug(f"'{fpath.name}' in path '{fpath}' is not checked")
         return True

@@ -29,7 +29,8 @@ from dati_playground.validators import (
     filename_format,
     filename_match_uri,
     filename_match_directory,
-    directory_versioning_pattern
+    directory_versioning_pattern,
+    mandatory_files_presence
 )
 
 @click.command()
@@ -51,6 +52,7 @@ from dati_playground.validators import (
 @click.option("--validate-filename-match-uri", default=False)
 @click.option("--validate-filename-match-directory", default=False)
 @click.option("--validate-directory-versioning-pattern", default=False)
+@click.option("--validate-mandatory-files-presence", default=False)
 @click.option("--pattern", default="")
 @click.option("--exclude", default=["NoneString"], type=str, multiple=True)
 @click.option("--debug", default=False, type=bool)
@@ -72,6 +74,7 @@ def main(
     validate_filename_match_uri,
     validate_filename_match_directory,
     validate_directory_versioning_pattern,
+    validate_mandatory_files_presence,
     pattern,
     exclude,
     build_schema_index,
@@ -161,6 +164,9 @@ def main(
                     filename_match_directory.validate(f, errors)
                 if validate_directory_versioning_pattern:
                     directory_versioning_pattern.validate(f, errors)
+                if validate_mandatory_files_presence: 
+                    mandatory_files_presence.validate(f, errors)
+                    errors = list(set(errors))
 
             if errors:
                 #raise RuntimeError("Errors found: " + "\n".join(errors))

@@ -156,3 +156,21 @@
     language: python
     pass_filenames: false
     require_serial: true
+
+-   id: validate-mandatory-files-presence
+    name: Validate mandatory files presence
+    description: |-
+      Checks if the directory containing the given file is a leaf directory 
+      and contains at least one turtle (.ttl) file.
+      If the directory path contains 'schemas', 
+      it also verifies the presence of a '.oas3.yaml' file.
+      if it does not find the required files
+      an error is logged, and the validation fails.
+
+    entry: python -m dati_playground validate --validate-mandatory-files-presence=true
+    files: >-
+      ^assets\/.*
+    language: python
+    require_serial: true
+    types:
+    - file
