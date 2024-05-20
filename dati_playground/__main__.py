@@ -10,6 +10,8 @@ import click
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
+
+
 from dati_playground.csv import is_csv
 from dati_playground.schema import build_schema
 from dati_playground.tools import (
@@ -30,8 +32,10 @@ from dati_playground.validators import (
     filename_match_uri,
     filename_match_directory,
     directory_versioning_pattern,
-    mandatory_files_presence
+    mandatory_files_presence,
+    utf8_file_encoding
 )
+
 
 @click.command()
 @click.argument("command", type=(click.Choice(["validate", "build"])))
@@ -53,6 +57,7 @@ from dati_playground.validators import (
 @click.option("--validate-filename-match-directory", default=False)
 @click.option("--validate-directory-versioning-pattern", default=False)
 @click.option("--validate-mandatory-files-presence", default=False)
+@click.option("--validate-utf8-file-encoding", default=False)
 @click.option("--pattern", default="")
 @click.option("--exclude", default=["NoneString"], type=str, multiple=True)
 @click.option("--debug", default=False, type=bool)
@@ -75,6 +80,7 @@ def main(
     validate_filename_match_directory,
     validate_directory_versioning_pattern,
     validate_mandatory_files_presence,
+    validate_utf8_file_encoding,
     pattern,
     exclude,
     build_schema_index,
@@ -128,6 +134,8 @@ def main(
     else:
         log.debug(files)
         errors = []
+        nfiles = len(files)
+        i=0
         if command == "validate":
             for f in files:
                 f = Path(f)
@@ -167,6 +175,8 @@ def main(
                 if validate_mandatory_files_presence: 
                     mandatory_files_presence.validate(f, errors)
                     errors = list(set(errors))
+                if validate_utf8_file_encoding:
+                    utf8_file_encoding.validate(f, errors)
 
             if errors:
                 #raise RuntimeError("Errors found: " + "\n".join(errors))

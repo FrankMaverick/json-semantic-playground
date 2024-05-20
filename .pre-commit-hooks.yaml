@@ -174,3 +174,18 @@
     require_serial: true
     types:
     - file
+
+-   id: validate-utf8-file-encoding
+    name: Validate utf8 file encoding
+    description: |-
+      Checks if the file is encoded in UTF-8.
+      if it's not encoded in UTF-8
+      an error is logged, and the validation fails.
+
+    entry: python -m dati_playground validate --validate-utf8-file-encoding=true
+    files: >-
+      ^assets\/.*
+    language: python
+    require_serial: true
+    types:
+    - file
