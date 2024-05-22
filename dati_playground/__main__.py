@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 
 
-from dati_playground.csv import is_csv
+#from dati_playground.validators.csv import is_csv
 from dati_playground.schema import build_schema
 from dati_playground.tools import (
     build_semantic_asset,
@@ -22,6 +22,7 @@ from dati_playground.tools import (
 from dati_playground.validators import (
     json_schema,
     openapi,
+    csv,
     is_turtle,
     list_files,
     validate_file,
@@ -148,7 +149,7 @@ def main(
                 if validate_turtle:
                     is_turtle(f.read_text())
                 if validate_csv:
-                    is_csv(f, errors)
+                    csv.validate(f, errors)
                 if validate_repo_structure:
                     repo_structure.validate(f)
                 if validate_filename_format:

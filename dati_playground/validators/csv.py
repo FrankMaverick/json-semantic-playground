@@ -11,7 +11,7 @@ from typing import Tuple
 log = logging.getLogger(__name__)
 
 RE_FIELD = re.compile("^[a-zA-Z0-9_]{2,64}$")
-from frictionless import Package, Resource, validate
+from frictionless import Package, Resource, validate as frictionless_validate
 
 def _get_resource(fpath) -> Tuple[Package, Resource]:
     datapackage_candidates = (
@@ -28,21 +28,20 @@ def _get_resource(fpath) -> Tuple[Package, Resource]:
     return None, Resource(fpath)
 
 
-def is_csv(fpath: Path, errors: list):
+def validate(fpath: Path, errors: list):
     """Expose validation results from frictionless.
 
     If you need to use the validation results, you can
     decorate this function with `@Report.from_validate`
     """
-    #errors = []
     package, resource = _get_resource(fpath)
 
     if package:
         report = resource.validate()
     else:
-        report = validate(fpath, skip_errors=["type-error"])
+        report = frictionless_validate(fpath, skip_errors=["type-error"])
 
-    #report = resource.validate()
+    #report = resource.f_validate()
     current_errors = {}
     if not report.valid:
         current_errors = report.flatten(['message'])
