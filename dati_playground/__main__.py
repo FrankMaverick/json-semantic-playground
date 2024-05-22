@@ -23,7 +23,7 @@ from dati_playground.validators import (
     json_schema,
     openapi,
     csv,
-    is_turtle,
+    turtle,
     list_files,
     validate_file,
     shacl,
@@ -139,7 +139,7 @@ def main(
             for f in files:
                 f = Path(f)
                 if validate_shacl:
-                    shacl.validate(f, errors) #ok
+                    shacl.validate(f, errors)
                 if validate_oas3:
                     openapi.validate(f, errors)
                 if validate_jsonschema:
@@ -147,11 +147,11 @@ def main(
                 if validate_versioned_directory:
                     versioned_directory.validate(f, errors)
                 if validate_turtle:
-                    is_turtle(f.read_text())
+                    turtle.validate(f, errors)
                 if validate_csv:
                     csv.validate(f, errors)
                 if validate_repo_structure:
-                    repo_structure.validate(f)
+                    repo_structure.validate(f, errors)
                 if validate_filename_format:
                     if not filename_format.validate(f):
                         errors_found = True

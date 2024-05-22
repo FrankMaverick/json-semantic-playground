@@ -6,8 +6,11 @@ from typing import Dict
 import jsonschema
 import dati_playground.validators.json_schema as json_schema
 import dati_playground.validators.openapi as openapi
+import dati_playground.validators.turtle as turtle
+
 import yaml
 from rdflib import Graph
+from rdflib.plugins.parsers.notation3 import BadSyntax
 from openapi_spec_validator import validate_spec
 import logging
 
@@ -25,12 +28,6 @@ def is_jsonld(content: str):
     content = yaml_to_json(content)
     g = Graph()
     g.parse(data=content, format=MIME_JSONLD)
-    return True
-
-
-def is_turtle(content: str):
-    g = Graph()
-    g.parse(data=content, format=MIME_TURTLE)
     return True
 
 
@@ -67,8 +64,8 @@ def is_valid_sqlite(datafile: Path, schema: Dict) -> bool:
 
 
 VALID_SUFFIXES = {
-    "*.ttl": is_turtle,
-    "*.shacl": is_turtle,
+    "*.ttl": turtle.validate,
+    "*.shacl": turtle.validate,
     "*.ld.yaml": is_jsonld,
     "*.oas3.yaml": openapi.validate,
     "*.schema.yaml": json_schema.validate,
