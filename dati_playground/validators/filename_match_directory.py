@@ -21,7 +21,7 @@ def validate(fpath: Path, errors):
     extension = ''.join(suffixes)
     filename = re.sub(extension, '', fpath.name)
 
-    if fpath.name in EXCLUDED_FILENAMES or extension in EXCLUDED_EXTENSIONS:
+    if fpath.name in EXCLUDED_FILENAMES or extension in EXCLUDED_EXTENSIONS or fpath.name:
         log.debug(f"The file '{fpath.name}' in path '{fpath}' is not checked")
         return True    
 

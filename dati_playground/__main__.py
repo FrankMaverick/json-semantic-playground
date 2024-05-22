@@ -153,8 +153,7 @@ def main(
                 if validate_repo_structure:
                     repo_structure.validate(f, errors)
                 if validate_filename_format:
-                    if not filename_format.validate(f):
-                        errors_found = True
+                    filename_format.validate(f, errors)
                 if validate_filename_match_uri:
                     filename_match_uri.validate(f, errors)
                 if validate_filename_match_directory:
@@ -168,15 +167,11 @@ def main(
 
             if errors:
                 errors = list(set(errors))
-                #raise RuntimeError("Errors found: " + "\n".join(errors))
-                print("Errors found:")
                 for error in errors:
-                    print(" - ",error,"\n")
+                    print("ERROR: ",error,"\n")
                 exit(1)
             else:
                 pass
-                print("No errors found")
-
 
 if __name__ == "__main__":
     main()

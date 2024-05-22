@@ -45,13 +45,15 @@ def validate(fpath: Path, errors):
     Validates the directory structure and naming conventions for versioned directories.
     """    
 
+    dir = Path(fpath.parent)
+
     # check if fpath is leaf and versioned dir
-    if not fpath.is_dir() or not is_leaf_directory(fpath) or not is_versioned_directory(fpath):
-        log.debug(f"'{fpath.name}' in path '{fpath}' is not checked")
+    if not dir.is_dir() or not is_leaf_directory(dir) or not is_versioned_directory(dir):
+        log.debug(f"'{dir.name}' in path '{dir}' is not checked")
         return True
     
-    log.debug(f"{fpath} is a leaf and versioned dir")
-    sibling_dirs = sibling_directories(fpath)
+    log.debug(f"{dir} is a leaf and versioned dir")
+    sibling_dirs = sibling_directories(dir)
 
     # Remove 'latest' from sibling_dirs and check if there are more than one directory
     version_dirs = []
@@ -65,14 +67,14 @@ def validate(fpath: Path, errors):
 
     # Verify that all version directories start with a number or "v"
     if not (all(re.match(r"v\d", version) for version in version_dirs) or all(version[0].isdigit() for version in version_dirs)):
-        log.debug(f"Error: Inconsistent versioning pattern found for {fpath}: {version_dirs}")
-        errors.append(f"Error: Inconsistent versioning pattern found for {fpath}: {version_dirs}")
+        log.debug(f"Inconsistent versioning pattern found for {dir}: {version_dirs}")
+        errors.append(f"Inconsistent versioning pattern found for {dir}: {version_dirs}")
         return False
 
     # Verify that all version directories match the versioning pattern
     if not (all(re.match(VERSION_PATTERN, version) for version in version_dirs)):
-        log.debug(f"Error: Inconsistent versioning pattern found for {fpath}: {version_dirs}")
-        errors.append(f"Error: Inconsistent versioning pattern found for {fpath}: {version_dirs}")
+        log.debug(f"Inconsistent versioning pattern found for {fpath}: {version_dirs}")
+        errors.append(f"Inconsistent versioning pattern found for {fpath}: {version_dirs}")
         return False
 
     return True

@@ -17,8 +17,12 @@ def extract_main_uri(ttl_fpath: Path):
     Returns:
         str: The main relative URI if found, otherwise None.
     """
-    g = Graph()
-    g.parse(str(ttl_fpath), format="ttl")
+    try:
+        g = Graph()
+        g.parse(str(ttl_fpath), format="ttl")
+    except Exception as e:
+        #errors.append(f"{fpath} is not a valid Turtle file: {e}")
+        raise Exception(e)
 
     # Define namespace prefixes
     dcatapit = Namespace("http://dati.gov.it/onto/dcatapit#")
@@ -50,8 +54,12 @@ def validate(fpath: Path, errors: List[str]):
         return True
 
     # Extract uri from file path
-    uri = extract_main_uri(fpath)
-    log.debug(f"URI: {uri}")
+    try:
+        uri = extract_main_uri(fpath)
+        log.debug(f"URI: {uri}")
+    except Exception as e:
+        errors.append(f"It's not possible to extract URI from {fpath}, it is not a valid Turtle file: {e}")
+        return False
 
     if uri:
         # Extract the final part of the URI
@@ -65,8 +73,6 @@ def validate(fpath: Path, errors: List[str]):
 
             # Check if the file with .oas3.yaml extension exists in the same directory
             yaml_file = Path(fpath.parent, f"{last_uri_part}")
-
-            log.info(yaml_file)
 
             if not yaml_file.exists():
                 log.debug(f"The file '{yaml_file}' corresponding to its relative URI '{uri}' does not exist.")

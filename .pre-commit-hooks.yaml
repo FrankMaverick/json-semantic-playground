@@ -79,7 +79,7 @@
     files: >-
       ^assets/vocabularies/.*\.csv
     language: python
-    require_serial: true
+    #require_serial: true
     types:
     - file
 
@@ -96,11 +96,13 @@
       If the present directories match the required ones and their names are compliant, 
       the check will pass, even if there are fewer directories
 
-    entry: python -m dati_playground validate --validate-repo-structure=true assets
+    entry: python -m dati_playground validate --validate-repo-structure=true
+    files: >-
+      ^assets\/.*\.ttl
     language: python
     fail_fast: true
-    pass_filenames: false
-    require_serial: true
+    types:
+    - file
 
 -   id: validate-filename-format
     name: Validate filename e directory name formats
@@ -114,7 +116,6 @@
     files: >-
       ^assets\/.*
     language: python
-    #require_serial: true
     types:
     - file
 
@@ -133,7 +134,7 @@
     files: >-
       ^assets\/.*\.ttl
     language: python
-    require_serial: true
+    #require_serial: true
     types:
     - file
 
@@ -150,7 +151,8 @@
     files: >-
       ^assets\/.*
     language: python
-    require_serial: true
+    exclude: >-
+      .*example.*
     types:
     - file
 
@@ -163,10 +165,12 @@
       If the directory name does not match the expected versioning pattern, 
       an error is logged, and the validation fails.
 
-    entry: python -m dati_playground validate --validate-directory-versioning-pattern=true assets\/**\/*.*
+    entry: python -m dati_playground validate --validate-directory-versioning-pattern=true
+    files: >-
+      ^assets\/.*\.ttl
     language: python
-    pass_filenames: false
-    require_serial: true
+    types:
+    - file
 
 -   id: validate-mandatory-files-presence
     name: Validate mandatory files presence
@@ -182,7 +186,7 @@
     files: >-
       ^assets\/.*
     language: python
-    require_serial: true
+    #require_serial: true
     types:
     - file
 
@@ -196,6 +200,6 @@
     files: >-
       ^assets\/.*
     language: python
-    require_serial: true
+    #require_serial: true
     types:
     - file
