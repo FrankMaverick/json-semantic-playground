@@ -20,8 +20,8 @@ from dati_playground.tools import (
     build_yaml_asset,
 )
 from dati_playground.validators import (
-    is_jsonschema,
-    is_openapi,
+    json_schema,
+    openapi,
     is_turtle,
     list_files,
     validate_file,
@@ -134,38 +134,26 @@ def main(
     else:
         log.debug(files)
         errors = []
-        nfiles = len(files)
-        i=0
         if command == "validate":
             for f in files:
                 f = Path(f)
-                #print(f"validating {f}")
                 if validate_shacl:
-                    shacl.validate(f)
+                    shacl.validate(f, errors) #ok
                 if validate_oas3:
-                    try:
-                        ret = is_openapi(f.read_text())
-                        if not ret:
-                            errors.append(f"{f} is not valid: {ret.errors}")
-                    except Exception as e:
-                        errors.append(f"{f} is not valid: {e}")
+                    openapi.validate(f, errors)
                 if validate_jsonschema:
-                    is_jsonschema(f.read_text())
+                    json_schema.validate(f, errors)
                 if validate_versioned_directory:
                     versioned_directory.validate(f, errors)
                 if validate_turtle:
                     is_turtle(f.read_text())
                 if validate_csv:
-                    try:
-                        ret = is_csv(f)
-                        if ret.valid is False:
-                            errors.append(f"{f} is not valid: {ret.errors}")
-                    except ValueError as e:
-                        errors.append(f"{f} is not valid: {e}")
+                    is_csv(f, errors)
                 if validate_repo_structure:
                     repo_structure.validate(f)
                 if validate_filename_format:
-                    filename_format.validate(f)
+                    if not filename_format.validate(f):
+                        errors_found = True
                 if validate_filename_match_uri:
                     filename_match_uri.validate(f, errors)
                 if validate_filename_match_directory:
@@ -174,11 +162,11 @@ def main(
                     directory_versioning_pattern.validate(f, errors)
                 if validate_mandatory_files_presence: 
                     mandatory_files_presence.validate(f, errors)
-                    errors = list(set(errors))
                 if validate_utf8_file_encoding:
                     utf8_file_encoding.validate(f, errors)
 
             if errors:
+                errors = list(set(errors))
                 #raise RuntimeError("Errors found: " + "\n".join(errors))
                 print("Errors found:")
                 for error in errors:

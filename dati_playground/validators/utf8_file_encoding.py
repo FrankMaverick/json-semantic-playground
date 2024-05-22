@@ -7,7 +7,7 @@ log = logging.getLogger(__name__)
 EXCLUDED_EXTENSIONS = [".md", ".png"]
 
 
-def validate(fpath: Path, errors):
+def validate(fpath: Path, errors: list):
     """
     Verifies if the specified file is encoded in UTF-8.
     """

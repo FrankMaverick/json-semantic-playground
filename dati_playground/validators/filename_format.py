@@ -4,15 +4,15 @@ import logging
 
 log = logging.getLogger(__name__)
 
-pattern = r'^[\\.a-z0-9 _-]{1,64}$'
+pattern = r'^[\\.a-z0-9_-]{2,64}$'
 extensions_to_check = ['.ttl', '.rdf', '.csv', '.yaml']
 
 def validate(fpath: Path):
 
     # Check if the file has a extension to check
     if fpath.suffix not in extensions_to_check:
-        log.info(f"The file '{fpath}' does not have a extension to check")
-        exit(0)
+        log.debug(f"The file '{fpath}' does not have a extension to check")
+        return True
 
     error_count = 0
     # Check the name of the file and parent directories
@@ -29,6 +29,6 @@ def validate(fpath: Path):
         error_count +=1    
 
     if(error_count > 0):
-        exit(1)
+       return False
 
-    exit(0)        
+    return True        

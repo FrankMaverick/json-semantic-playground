@@ -5,6 +5,7 @@
 import json
 import logging
 import re
+from pathlib import Path
 from typing import Tuple
 
 log = logging.getLogger(__name__)
@@ -21,19 +22,19 @@ def _get_resource(fpath) -> Tuple[Package, Resource]:
         log.debug(f"Found {datapackage} in {fpath.parent}")
         for r in package.resources:
             if r.path == fpath.name:
-                log.warning(f"Loading metadata for {r.path} from {datapackage.name}.")
+                log.info(f"Loading metadata for {r.path} from {datapackage.name}.")
                 return package, r
 
     return None, Resource(fpath)
 
 
-def is_csv(fpath):
+def is_csv(fpath: Path, errors: list):
     """Expose validation results from frictionless.
 
     If you need to use the validation results, you can
     decorate this function with `@Report.from_validate`
     """
-    errors = []
+    #errors = []
     package, resource = _get_resource(fpath)
 
     if package:
@@ -45,9 +46,8 @@ def is_csv(fpath):
     current_errors = {}
     if not report.valid:
         current_errors = report.flatten(['message'])
-        log.error(f"Invalid file: {fpath}.")
-        log.debug(json.dumps(current_errors, indent=2))
-        #errors.append({fpath.as_posix(): current_errors})
+        log.debug(f"Invalid file: {fpath}.")
+        log.debug(json.dumps(current_errors, indent=1))
 
     #
     # Test field names if a datapackage is not defined.
@@ -59,16 +59,17 @@ def is_csv(fpath):
             for field in tasks.labels
             if not RE_FIELD.match(str(field))
         ]:
-            log.error(
-                f"Invalid field name for publication: {field_name} in {fpath.name}"
-            )
-            current_errors = {
-                field_name: f"Invalid field name for publication: {field_name}"
-            }
+            current_errors.append([f"Invalid field name for publication: {field_name}"])
     
-    if current_errors:
-        errors.append({fpath.as_posix(): current_errors})
-        raise ValueError(errors)
+    # Flat the nested list to a single list
+    flat_errors = [error[0] for error in current_errors]
+    
+    # Convert the list to a string
+    errors_string = '\n\t' + '\n\t'.join(flat_errors)
 
-    log.info(f"File is valid: {fpath}")
-    return report
+    if current_errors:
+        errors.append(f"Invalid file: {fpath.as_posix()}: {errors_string}")
+        return False
+
+    log.debug(f"File is valid: {fpath}")
+    return True

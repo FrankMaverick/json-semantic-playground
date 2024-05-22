@@ -1,12 +1,9 @@
 import difflib
 import logging
 from distutils.version import LooseVersion
-from functools import lru_cache
 from pathlib import Path
 from typing import List
 
-from pyshacl import validate
-from rdflib import Graph
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +20,7 @@ def validate(fpath: Path, errors: List):
     ]
     log.debug("Identified folders: %r", (folders,))
     if not folders:
-        log.info(f"No versioned directories found for {fpath}")
+        log.debug(f"No versioned directories found for {fpath}")
         return
     last_version_dirname = sorted(LooseVersion(x) for x in folders)[-1]
     log.debug("Version: %r", (last_version_dirname,))
@@ -41,6 +38,6 @@ def validate(fpath: Path, errors: List):
         if diffs:
             errstr = f"ERROR: files are different: {cpath} {fpath}"
             errors.append(errstr)
-            log.error(diffs)
+            log.debug(diffs)
         else:
-            log.info(f"File {cpath} is up to date with {fpath}")
+            log.debug(f"File {cpath} is up to date with {fpath}")
