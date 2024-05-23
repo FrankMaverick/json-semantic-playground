@@ -138,6 +138,7 @@ repos:
         - file
       additional_dependencies:
           - git+https://github.com/ioggstream/json-semantic-playground
+
     - id: validate-filename-format
       name: Validate filename e directory name formats
       entry: python -m dati_playground validate --validate-filename-format=true
