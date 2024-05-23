@@ -121,7 +121,7 @@
 
 
 -   id: validate-filename-match-uri
-    name: Validate filename match uri in ttl
+    name: Validate filename match uri
     description: |-
       It checks if a file's name matches its corresponding URI extracted from a TTL file. 
       It extracts the main URI relative to the TTL file, 

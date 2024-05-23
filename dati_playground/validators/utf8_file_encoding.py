@@ -1,11 +1,9 @@
 from pathlib import Path
-
 import logging
 
 log = logging.getLogger(__name__)
 
 EXCLUDED_EXTENSIONS = [".md", ".png"]
-
 
 def validate(fpath: Path, errors: list):
     """

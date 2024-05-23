@@ -168,7 +168,7 @@ def main(
             if errors:
                 errors = list(set(errors))
                 for error in errors:
-                    print("ERROR: ",error,"\n")
+                    print("ERROR: ",error)
                 exit(1)
             else:
                 pass

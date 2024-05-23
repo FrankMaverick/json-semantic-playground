@@ -2,15 +2,10 @@ import difflib
 import logging
 from distutils.version import LooseVersion
 from pathlib import Path
-from typing import List
-
 
 log = logging.getLogger(__name__)
 
-MAX_DEPTH = 5
-basedir = Path(__file__).parent
-
-def validate(fpath: Path, errors: List):
+def validate(fpath: Path, errors: list):
     if fpath.parent.name != "latest":
         return
     folders = [
@@ -36,8 +31,7 @@ def validate(fpath: Path, errors: List):
         )
         diffs = "".join(diff)
         if diffs:
-            errstr = f"ERROR: files are different: {cpath} {fpath}"
-            errors.append(errstr)
+            errors.append(f"files are different: {cpath} {fpath}")
             log.debug(diffs)
         else:
             log.debug(f"File {cpath} is up to date with {fpath}")
