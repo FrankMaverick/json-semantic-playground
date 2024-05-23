@@ -1,11 +1,12 @@
+import logging
 from pathlib import Path
 
 import jsonschema
 import yaml
-import logging
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
+
 
 def validate(fpath: Path, errors: list):
     try:
@@ -26,8 +27,12 @@ def validate(fpath: Path, errors: list):
         errors.append(f"JSON Schema validation error on file {fpath}: \n{e}")
         return False
     except Exception as e:
-        log.debug(f"Unexpected error during JSON Schema validation on file {fpath}: \n{e}")
-        errors.append(f"Unexpected error during JSON Schema validation on file {fpath}: \n{e}")
+        log.debug(
+            f"Unexpected error during JSON Schema validation on file {fpath}: \n{e}"
+        )
+        errors.append(
+            f"Unexpected error during JSON Schema validation on file {fpath}: \n{e}"
+        )
         return False
 
     return True

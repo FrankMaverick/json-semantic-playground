@@ -1,23 +1,20 @@
+import logging
 import os
 from pathlib import Path
 from typing import Dict
 
-
 import jsonschema
+import yaml
+from rdflib import Graph
+
 import dati_playground.validators.json_schema as json_schema
 import dati_playground.validators.openapi as openapi
 import dati_playground.validators.turtle as turtle
 
-import yaml
-from rdflib import Graph
-from rdflib.plugins.parsers.notation3 import BadSyntax
-from openapi_spec_validator import validate_spec
-import logging
-
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-from dati_playground.utils import MIME_JSONLD, MIME_TURTLE, yaml_to_json
+from dati_playground.utils import MIME_JSONLD, yaml_to_json
 
 
 def true(*a, **kw):

@@ -1,11 +1,11 @@
-import re
+import logging
 from pathlib import Path
-from rdflib import Graph, RDF, RDFS, OWL, SKOS, Namespace
 from typing import List
 
-import logging
+from rdflib import OWL, RDF, SKOS, Graph, Namespace
 
 log = logging.getLogger(__name__)
+
 
 def extract_main_uri(ttl_fpath: Path):
     """
@@ -21,7 +21,7 @@ def extract_main_uri(ttl_fpath: Path):
         g = Graph()
         g.parse(str(ttl_fpath), format="ttl")
     except Exception as e:
-        #errors.append(f"{fpath} is not a valid Turtle file: {e}")
+        # errors.append(f"{fpath} is not a valid Turtle file: {e}")
         raise Exception(e)
 
     # Define namespace prefixes
@@ -30,7 +30,9 @@ def extract_main_uri(ttl_fpath: Path):
     main_uri = None
 
     for s, p, o in g:
-        if (s, RDF.type, OWL.Ontology) in g and "onto" in str(ttl_fpath.parents[1]).lower():
+        if (s, RDF.type, OWL.Ontology) in g and "onto" in str(
+            ttl_fpath.parents[1]
+        ).lower():
             main_uri = s
             break
         elif p == RDF.type and o == dcatapit.Dataset:
@@ -38,17 +40,18 @@ def extract_main_uri(ttl_fpath: Path):
             break
         # elif (s, RDF.type, RDFS.Class) in g:
         #     main_uri = s
-        #     break        
+        #     break
         elif (s, RDF.type, SKOS.ConceptScheme) in g:
             main_uri = s
-            break        
+            break
 
     return main_uri
 
+
 def validate(fpath: Path, errors: List[str]):
-    
+
     log.debug(f"File Path:{fpath}")
-    suffix= fpath.suffix
+    suffix = fpath.suffix
 
     if suffix != ".ttl":
         return True
@@ -58,14 +61,16 @@ def validate(fpath: Path, errors: List[str]):
         uri = extract_main_uri(fpath)
         log.debug(f"URI: {uri}")
     except Exception as e:
-        errors.append(f"It's not possible to extract URI from {fpath}, it is not a valid Turtle file: {e}")
+        errors.append(
+            f"It's not possible to extract URI from {fpath}, it is not a valid Turtle file: {e}"
+        )
         return False
 
     if uri:
         # Extract the final part of the URI
         uri_parts = str(uri).split("/")
         last_uri_part = uri_parts[-1]
-        if last_uri_part == '':
+        if last_uri_part == "":
             last_uri_part = uri_parts[-2]
 
         # Check if the parent of the fpath contain "schema"
@@ -75,12 +80,18 @@ def validate(fpath: Path, errors: List[str]):
             yaml_file = Path(fpath.parent, f"{last_uri_part}")
 
             if not yaml_file.exists():
-                log.debug(f"The file '{yaml_file}' corresponding to its relative URI '{uri}' does not exist.")
-                errors.append(f"The file '{yaml_file}' corresponding to its relative URI '{uri}' does not exist.")
+                log.debug(
+                    f"The file '{yaml_file}' corresponding to its relative URI '{uri}' does not exist."
+                )
+                errors.append(
+                    f"The file '{yaml_file}' corresponding to its relative URI '{uri}' does not exist."
+                )
                 return False
         else:
             if fpath.stem != last_uri_part:
                 log.debug(f"The file '{fpath}' does not match its relative URI '{uri}'")
-                errors.append(f"The file '{fpath}' does not match its relative URI '{uri}'")
+                errors.append(
+                    f"The file '{fpath}' does not match its relative URI '{uri}'"
+                )
                 return False
     return True

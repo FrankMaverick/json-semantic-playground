@@ -1,12 +1,13 @@
+import logging
 import re
 from pathlib import Path
-
-import logging
 
 log = logging.getLogger(__name__)
 
 VERSION_PATTERN = r"(latest|v?\d+(\.\d+){0,2})$"  # Regular expression pattern to match versioning format
-DIR_PATTERN = r"(latest|\b(?:\D*\d\D*)+\b)"  # Regular expression pattern to match directory names
+DIR_PATTERN = (
+    r"(latest|\b(?:\D*\d\D*)+\b)"  # Regular expression pattern to match directory names
+)
 
 
 def is_leaf_directory(directory: Path) -> bool:
@@ -22,7 +23,7 @@ def is_leaf_directory(directory: Path) -> bool:
 def sibling_directories(directory: Path) -> list:
     """
     Retrieves a list of sibling directories at the same level as the specified directory.
-    """    
+    """
     parent_directory = directory.parent
 
     # all subdir
@@ -32,6 +33,7 @@ def sibling_directories(directory: Path) -> list:
             subdirectories.append(subdir)
 
     return subdirectories
+
 
 def is_versioned_directory(directory: Path) -> bool:
     """
@@ -43,15 +45,19 @@ def is_versioned_directory(directory: Path) -> bool:
 def validate(fpath: Path, errors):
     """
     Validates the directory structure and naming conventions for versioned directories.
-    """    
+    """
 
     dir = Path(fpath.parent)
 
     # check if fpath is leaf and versioned dir
-    if not dir.is_dir() or not is_leaf_directory(dir) or not is_versioned_directory(dir):
+    if (
+        not dir.is_dir()
+        or not is_leaf_directory(dir)
+        or not is_versioned_directory(dir)
+    ):
         log.debug(f"'{dir.name}' in path '{dir}' is not checked")
         return True
-    
+
     log.debug(f"{dir} is a leaf and versioned dir")
     sibling_dirs = sibling_directories(dir)
 
@@ -62,19 +68,26 @@ def validate(fpath: Path, errors):
             version_dirs.append(dir.name)
     if len(version_dirs) < 2:
         return True
-    
+
     log.debug(f"Versioned directories to validate: {version_dirs}")
 
     # Verify that all version directories start with a number or "v"
-    if not (all(re.match(r"v\d", version) for version in version_dirs) or all(version[0].isdigit() for version in version_dirs)):
+    if not (
+        all(re.match(r"v\d", version) for version in version_dirs)
+        or all(version[0].isdigit() for version in version_dirs)
+    ):
         log.debug(f"Inconsistent versioning pattern found for {dir}: {version_dirs}")
-        errors.append(f"Inconsistent versioning pattern found for {dir}: {version_dirs}")
+        errors.append(
+            f"Inconsistent versioning pattern found for {dir}: {version_dirs}"
+        )
         return False
 
     # Verify that all version directories match the versioning pattern
     if not (all(re.match(VERSION_PATTERN, version) for version in version_dirs)):
         log.debug(f"Inconsistent versioning pattern found for {fpath}: {version_dirs}")
-        errors.append(f"Inconsistent versioning pattern found for {fpath}: {version_dirs}")
+        errors.append(
+            f"Inconsistent versioning pattern found for {fpath}: {version_dirs}"
+        )
         return False
 
     return True

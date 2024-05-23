@@ -5,6 +5,7 @@ from pathlib import Path
 
 log = logging.getLogger(__name__)
 
+
 def validate(fpath: Path, errors: list):
     if fpath.parent.name != "latest":
         return

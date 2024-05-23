@@ -1,6 +1,7 @@
 """
 Validation script for semantic assets.
 """
+
 import logging
 from multiprocessing import Pool
 from pathlib import Path
@@ -11,8 +12,7 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
 
-
-#from dati_playground.validators.csv import is_csv
+# from dati_playground.validators.csv import is_csv
 from dati_playground.schema import build_schema
 from dati_playground.tools import (
     build_semantic_asset,
@@ -20,21 +20,21 @@ from dati_playground.tools import (
     build_yaml_asset,
 )
 from dati_playground.validators import (
-    json_schema,
-    openapi,
     csv,
-    turtle,
-    list_files,
-    validate_file,
-    shacl,
-    versioned_directory,
-    repo_structure,
-    filename_format,
-    filename_match_uri,
-    filename_match_directory,
     directory_versioning_pattern,
+    filename_format,
+    filename_match_directory,
+    filename_match_uri,
+    json_schema,
+    list_files,
     mandatory_files_presence,
-    utf8_file_encoding
+    openapi,
+    repo_structure,
+    shacl,
+    turtle,
+    utf8_file_encoding,
+    validate_file,
+    versioned_directory,
 )
 
 
@@ -86,7 +86,7 @@ def main(
     exclude,
     build_schema_index,
     debug,
-):  
+):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     if command == "build":
@@ -100,7 +100,7 @@ def main(
             if pattern in x.name
             if all((exclude_item not in x.name for exclude_item in exclude))
         ]
-        
+
         log.warning(f"Examining {file_list} with {exclude}")
         workers = Pool(processes=4)
         if validate:
@@ -160,7 +160,7 @@ def main(
                     filename_match_directory.validate(f, errors)
                 if validate_directory_versioning_pattern:
                     directory_versioning_pattern.validate(f, errors)
-                if validate_mandatory_files_presence: 
+                if validate_mandatory_files_presence:
                     mandatory_files_presence.validate(f, errors)
                 if validate_utf8_file_encoding:
                     utf8_file_encoding.validate(f, errors)
@@ -168,10 +168,11 @@ def main(
             if errors:
                 errors = list(set(errors))
                 for error in errors:
-                    print("ERROR: ",error)
+                    print("ERROR: ", error)
                 exit(1)
             else:
                 pass
+
 
 if __name__ == "__main__":
     main()

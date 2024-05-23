@@ -1,5 +1,5 @@
-connexion[swagger-ui]==2.14.1
-connexion==2.14.1
+connexion[swagger-ui]==3.0.0
+connexion==3.0.0
 requests==2.31.0
 openapi-resolver==0.0.6
 PyYAML==6.0.1

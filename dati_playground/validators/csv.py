@@ -11,7 +11,9 @@ from typing import Tuple
 log = logging.getLogger(__name__)
 
 RE_FIELD = re.compile("^[a-zA-Z0-9_]{2,64}$")
-from frictionless import Package, Resource, validate as frictionless_validate
+from frictionless import Package, Resource
+from frictionless import validate as frictionless_validate
+
 
 def _get_resource(fpath) -> Tuple[Package, Resource]:
     datapackage_candidates = (
@@ -41,10 +43,10 @@ def validate(fpath: Path, errors: list):
     else:
         report = frictionless_validate(fpath, skip_errors=["type-error"])
 
-    #report = resource.f_validate()
+    # report = resource.f_validate()
     current_errors = {}
     if not report.valid:
-        current_errors = report.flatten(['message'])
+        current_errors = report.flatten(["message"])
         log.debug(f"Invalid file: {fpath}.")
         log.debug(json.dumps(current_errors, indent=1))
 
@@ -59,12 +61,12 @@ def validate(fpath: Path, errors: list):
             if not RE_FIELD.match(str(field))
         ]:
             current_errors.append([f"Invalid field name for publication: {field_name}"])
-    
+
     # Flat the nested list to a single list
     flat_errors = [error[0] for error in current_errors]
-    
+
     # Convert the list to a string
-    errors_string = '\n\t' + '\n\t'.join(flat_errors)
+    errors_string = "\n\t" + "\n\t".join(flat_errors)
 
     if current_errors:
         errors.append(f"Invalid file: {fpath.as_posix()}: {errors_string}")

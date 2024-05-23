@@ -1,9 +1,6 @@
-import difflib
 import logging
-from distutils.version import LooseVersion
 from functools import lru_cache
 from pathlib import Path
-from typing import List
 
 from pyshacl import validate as pyshacl_validate
 from rdflib import Graph
@@ -12,6 +9,7 @@ log = logging.getLogger(__name__)
 
 MAX_DEPTH = 5
 basedir = Path(__file__).parent
+
 
 @lru_cache(maxsize=100)
 def get_shacl_graph(absolute_path: str) -> Graph:
@@ -43,7 +41,9 @@ def validate(fpath: Path, errors: list):
         is_valid, graph, report_text = pyshacl_validate(
             fpath.as_posix(), shacl_graph=shacl_graph, advanced=True
         )
-        log.debug(f"Validation result: {fpath}, {is_valid}, {rule_file_path}, {report_text}")
+        log.debug(
+            f"Validation result: {fpath}, {is_valid}, {rule_file_path}, {report_text}"
+        )
         if not is_valid:
             errors.append(f"The file '{fpath}' is not valid: {report_text}")
             return False
@@ -51,5 +51,5 @@ def validate(fpath: Path, errors: list):
     except Exception as e:
         log.debug(f"Error validating {fpath}: {rule_file_path} {e}")
         errors.append(f"Error validating {fpath}: {rule_file_path} {e}")
-        #raise
+        # raise
         return False

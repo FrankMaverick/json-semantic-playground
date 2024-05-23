@@ -1,18 +1,18 @@
+import logging
 from pathlib import Path
 
 from rdflib import Graph
 from rdflib.plugins.parsers.notation3 import BadSyntax
-import logging
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-from dati_playground.utils import MIME_JSONLD, MIME_TURTLE, yaml_to_json
+from dati_playground.utils import MIME_TURTLE
 
 
 def validate(fpath: Path, errors: list):
     try:
-        content = fpath.read_text(encoding='utf-8')
+        content = fpath.read_text(encoding="utf-8")
         g = Graph()
         g.parse(data=content, format=MIME_TURTLE)
         return True

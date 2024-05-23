@@ -1,8 +1,8 @@
+import logging
 from pathlib import Path
 
 import yaml
 from openapi_spec_validator import validate_spec
-import logging
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
